@@ -1,53 +1,75 @@
-#include<iostream>
-#include<stdlib.h>
-#include<string>
-#include<stdio.h>
+#include <iostream>
+#include <string>
+
 using namespace std;
 
-const int MAX = 100;
+#define MAX 100
 
 // -------------- stack --------------
 
 char stack[MAX];
-int top=0;
+int top = -1;
 
 void push(char ch)
 {
-	stack[top++]=ch;
+	stack[++top] = ch;
 }
 
 char pop()
 {
-	return stack[--top];
+	return stack[top--];
 }
 
 // -------------- end stack -----------
 
+char opening(char ch)
+{
+	switch (ch)
+	{
+	case '}':
+		return '{';
+	case ']':
+		return '[';
+	case ')':
+		return '(';
+	case '>':
+		return '<';
+	}
+}
+
 int main()
 {
+
 	string exp;
-	cout<<"Enter The Expression : ";
+	int valid = 1, i = 0;
+	cout << "Enter The Expression : ";
 	cin >> exp;
-	for (int i = 0; i < exp.length(); i++)
+
+	while (valid == 1 && i < exp.length())
 	{
-			if (exp[i]=='(' || exp[i]=='{' || exp[i]=='[' || exp[i]=='<')
-			{
-				push(exp[i]);
-			}
-			else if (exp[i]==')' || exp[i]=='}' || exp[i]==']' || exp[i]=='>')
-			{
-                pop();
-			}
+		if (exp[i] == '(' || exp[i] == '{' || exp[i] == '[' || exp[i] == '<')
+		{
+			push(exp[i]);
+		}
+		else if (top >= 0 && stack[top] == opening(exp[i]))
+		{
+			pop();
+		}
+		else
+		{
+			valid = 0;
+		}
+		i++;
 	}
 
-    // makes sure the stack is empty after processsing (above)
-	if(top==0)
+	// makes sure the stack is empty after processsing (above)
+	if (valid == 1 && top == -1)
 	{
-		cout<<"Correct Expression";
+		cout << "\nCorrect Expression";
 	}
 	else
 	{
-		cout<<"\nWrong Expression";
+		cout << "\nWrong Expression";
 	}
 
 	return 0;
